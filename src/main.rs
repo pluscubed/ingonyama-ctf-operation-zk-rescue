@@ -4,11 +4,9 @@ pub mod prover;
 pub mod rng;
 pub mod verifier;
 
-use ark_bls12_381::{Bls12_381, Fr as F};
-use ark_ff::{Zero, BigInteger256};
-use ark_poly::{
-    univariate::DensePolynomial, EvaluationDomain, GeneralEvaluationDomain,UVPolynomial,
-};
+use ark_bls12_381::{Bls12_381, Fr as F, Fr};
+use ark_ff::{Zero, BigInteger256, BigInteger, PrimeField};
+use ark_poly::{univariate::DensePolynomial, EvaluationDomain, GeneralEvaluationDomain, UVPolynomial, Polynomial};
 use ark_poly_commit::{marlin_pc::MarlinKZG10, LabeledPolynomial, PolynomialCommitment};
 use ark_std::{rand::rngs::StdRng, test_rng};
 use blake2::Blake2s;
@@ -22,6 +20,12 @@ use std::{thread, time};
 pub const PROTOCOL_NAME: &'static [u8] = b"OPERATION_ZK_RESCUE";
 pub type PC = MarlinKZG10<Bls12_381, DensePolynomial<F>>;
 type FS = SimpleHashFiatShamirRng<Blake2s, ChaChaRng>;
+
+use hex::ToHex;
+
+fn to_string(h: &Fr) -> String {
+    return String::from_utf8(h.into_repr().to_bytes_be()).unwrap_or(h.to_string())
+}
 
 fn main() {
     puzzle(PUZZLE_DESCRIPTION);
@@ -69,44 +73,70 @@ fn main() {
     F::new(BigInteger256([11918697147346910008, 9233808242802061551, 14395435043740768310, 4872975318810306762])), 
     F::new(BigInteger256([12098040391674830792, 13279254240913572044, 17820649906232228079, 6653899853934111562]))];
 
+
+
+    for integer in poly_evals.iter(){
+        println!("{}",integer);
+    }
+
     println!("Sumcheck preparation..\n");
-    thread::sleep(time::Duration::from_secs(2));
+    // thread::sleep(time::Duration::from_secs(2));
     //interpolate to coeff form using ifft 
     println!("Encoding identities..\n");
-    thread::sleep(time::Duration::from_secs(2));
+    // thread::sleep(time::Duration::from_secs(2));
     let poly_coeffs = GeneralEvaluationDomain::ifft(&domain,&poly_evals);
     let f = DensePolynomial::from_coefficients_slice(&poly_coeffs);
 
-  
+    // begin sanity
+    let mut real_sum = F::zero();
+    for h in domain.elements() {
+        real_sum += f.evaluate(&h);
+    }
+    println!("real sum: {}", to_string(&real_sum));
+    println!("real sum: {}", real_sum);
+
+    let mut xored_res = poly_evals[0].into_repr().to_bytes_be();
+    for h in &poly_evals.clone()[1..] {
+        xored_res = xored_res
+            .iter()
+            .zip(h.into_repr().to_bytes_be().iter())
+            .map(|(&x1, &x2)| x1 ^ x2)
+            .collect();
+    }
+    let s = xored_res.encode_hex::<String>();
+    println!("xored res: {}", s);
+
+    // assert_ne!(real_sum, F::zero());
+    // end sanity
 
     let sum = F::zero();
 
     let f = LabeledPolynomial::new("f".into(), f.clone(), None, Some(1));
     let (f_commitment, f_rand) = PC::commit(&ck, &[f.clone()], Some(&mut rng)).unwrap();
     println!("Preparing the statement:\n");
-    thread::sleep(time::Duration::from_secs(2));
+    // thread::sleep(time::Duration::from_secs(2));
     let statement = Statement {
         domain,
         f: f_commitment[0].commitment().clone(),
         sum,
     };
     println!("Beep! Beep! Incoming transmission: \n");
-    thread::sleep(time::Duration::from_secs(2));
+    // thread::sleep(time::Duration::from_secs(2));
     puzzle(FORGER);
     
     let proof = prove::<F, PC, FS, StdRng>(&ck, &statement, &f, &f_rand[0], &mut rng).unwrap();
 
     println!("Verifying the proof");
     let res = verify::<F, PC, FS, StdRng>(&vk, &statement, &proof, &mut rng);
-    thread::sleep(time::Duration::from_secs(2));
+    // thread::sleep(time::Duration::from_secs(2));
 
     if res.is_ok() {
         println!("Sumcheck validation successful!");
-        thread::sleep(time::Duration::from_secs(4));
+        // thread::sleep(time::Duration::from_secs(4));
         flag_quest();
     } else {
         println!("Sumcheck validation failure!");
-        thread::sleep(time::Duration::from_secs(4));
+        // thread::sleep(time::Duration::from_secs(4));
         woe_jinx_death();
     };
 }

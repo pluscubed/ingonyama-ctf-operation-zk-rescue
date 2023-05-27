@@ -5,10 +5,10 @@
 
 Agent Zulu has gone M.I.A.
 
-We have received reports that he has been kidnapped by the notorious Woe Jinx. 
-Direct intervention without evidence is not an option. 
-Our friendly enemy The Concierge of crime: Red, has managed to get one of his associates 
-(The forger) infiltrate into Jinx's organization, who will be your point contact.   
+We have received reports that he has been kidnapped by the notorious Woe Jinx.
+Direct intervention without evidence is not an option.
+Our friendly enemy The Concierge of crime: Red, has managed to get one of his associates
+(The forger) infiltrate into Jinx's organization, who will be your point contact.
 
 Your task is to send us a confirmation message that indeed Zulu is inside Jinx's base so we
 can rescue our man quietly.
@@ -18,16 +18,16 @@ when the sumcheck evaluates to zero.
 
 The Forger has forged an identity for you in order to faciliate a one time message.
 However, we ran some tests and found that it may not pass the validation.
-We have no idea what game Red and the forger are playing here. 
+We have no idea what game Red and the forger are playing here.
 
 We do know that Woe Jinx protects his men from HQ by anonymizing the validation process, this basically
-adds a random polynomial to the claimed polynomial. This is usually a real pain in the butt. 
-But, perhaps the anonymization can be used to your advantage this time. Just watch out that Jinx double checks the anonymization, 
+adds a random polynomial to the claimed polynomial. This is usually a real pain in the butt.
+But, perhaps the anonymization can be used to your advantage this time. Just watch out that Jinx double checks the anonymization,
 so if you use a constant polynomial for anonymization, you will get caught!
 
 Once you have cleared the validation, we will use a security lapse window to activate recieving a one time message from you.
-We have been told by Red that you will have to eventually find some of the information you need on your own. 
-U have got Big intELLIGENCE, be YOURSELF!
+We have been told by Red that you will have to eventually find some of the information you need on your own.
+U have got Big intELLIGENCE, be YOURSELF! We are expecting your message in 8 in the futURE.
 
 Note that if Jinx learns the message during the validation, the probability you will live is pretty low.
 
@@ -54,3 +54,4 @@ BTW: Red said 'You will have to find some of the information yourself', you know
 5. Listen to Red for more clues.
 
 ---
+22222422221111111111555111111111123444444442
